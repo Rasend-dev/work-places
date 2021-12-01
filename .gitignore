@@ -1,18 +1,5 @@
-accounts_data/
-fuck_instagram.py
-# Byte-compiled / optimized / LL files
-__pycache__/
-*.py[cod]
-*$py.class
-#pycache from scraper
-Scraper/__pycache__/
-Scraper/Scraper/spiders/__pycache__/
-Scraper/Scraper/__pycache__/
-*.pyc
-#Json folder 
-Json_files/
-#history folder
-history_files/
+#
+test.py
 # C extensions
 *.so
 *.json
