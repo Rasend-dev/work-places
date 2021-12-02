@@ -1,6 +1,8 @@
 #
+
 test.py
 # C extensions
+*.xlsx
 *.so
 *.json
 *.csv
