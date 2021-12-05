@@ -37,22 +37,28 @@ class Scraper():
 
         data = {'nombre':[],'telefono':[],'direccion':[],'ciudad':[],'pais':[]}
 
-        for i in range(len(available_pages)):
+        for i in range(9):
             places_data = driver.find_elements(By.XPATH,'//div[@class="rl_tile-group"]/div[@class and @jscontroller and @jsaction]//a[contains(@class,"a-no-hover-decoration")]')
             next_page = driver.find_element(By.XPATH,'//tbody/tr/td[@class]/a[@id="pnnext"]')
-
-            for x in places_data:
+            for d,x in enumerate(places_data):
                 x.click()
-                time.sleep(2)
-                name = driver.find_element(By.XPATH,'//div[@class="immersive-container"]//h2/span').text
-
+                time.sleep(2.3)
                 try:
-                    direction = driver.find_elements(By.XPATH,'//div[@class="immersive-container"]//div[@style]//div[@data-dtype]/span')[1].text
-                    raw = direction.split(',')
-                    city = raw[len(raw) - 2]
-                    direction = ','.join(raw[:len(raw)-2])
-                    data['ciudad'].append(city)
-                    data['direccion'].append(direction)
+                    name = driver.find_element(By.XPATH,'//div[@class="immersive-container"]//h2/span').text
+                except NoSuchElementException:
+                    name = driver.find_element(By.XPATH,f'//div[@class="rl_tile-group"]/div[@class and @jscontroller and @jsaction]//a[contains(@class,"a-no-hover-decoration")]//div[@role="heading"]/span[{d}]').text
+                    print(name,'nombre encontrado')
+                try:
+                    direction = driver.find_elements(By.XPATH,'//div[@class="immersive-container"]//div[@style]//div[@data-dtype]/span') 
+                    if direction:
+                        raw = direction[1].text.split(',')
+                        city = raw[len(raw) - 2]
+                        clean_direction = ','.join(raw[:len(raw)-2])
+                        data['ciudad'].append(city)
+                        data['direccion'].append(clean_direction)
+                    else:
+                        data['ciudad'].append('No disponible')
+                        data['direccion'].append('No disponible')    
                 except NoSuchElementException:
                     data['direccion'].append('No disponible')
 
@@ -66,7 +72,7 @@ class Scraper():
                 data['pais'].append('Mexico')
 
             next_page.click()
-            time.sleep(3)
+            time.sleep(2.3)
 
         df = pd.DataFrame(data,columns=['nombre','telefono','direccion','ciudad','pais'])
         return df
